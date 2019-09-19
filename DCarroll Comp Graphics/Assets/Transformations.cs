@@ -6,6 +6,7 @@ public class Transformations : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        //Initialize the cube
         Vector3[] cube = new Vector3[8];
         cube[0] = new Vector3(1, 1, 1);
         cube[1] = new Vector3(-1, 1, 1);
@@ -16,6 +17,7 @@ public class Transformations : MonoBehaviour {
         cube[6] = new Vector3(-1, -1, -1);
         cube[7] = new Vector3(1, -1, -1);
 
+        //Rotate the Cube
         Vector3 startingAxis = new Vector3(15, 5, 5);
         startingAxis.Normalize();
         Quaternion rotation = Quaternion.AngleAxis(47, startingAxis);
@@ -29,6 +31,8 @@ public class Transformations : MonoBehaviour {
             MatrixTransform(cube, rotationMatrix);
         printVerts(imageAfterRotation);
 
+
+        //Scale the Cube
         Matrix4x4 scaleMatrix = Matrix4x4.TRS(new Vector3(0, 0, 0), Quaternion.identity, new Vector3(15, 3, 5));
 
         printMatrix(scaleMatrix);
@@ -38,6 +42,8 @@ public class Transformations : MonoBehaviour {
 
         printVerts(ImageAfterScaling);
 
+
+        //Translate the Cube
         Matrix4x4 translationMatrix = Matrix4x4.TRS(new Vector3(2, 4, -4), Quaternion.identity, new Vector3(1, 1, 1));
 
         printMatrix(translationMatrix);
@@ -45,6 +51,8 @@ public class Transformations : MonoBehaviour {
         Vector3[] ImageAfterTranslation = MatrixTransform(ImageAfterScaling, translationMatrix);
 
         printVerts(ImageAfterTranslation);
+
+        //Combine the Matrices
 
         Matrix4x4 singleMatrixOfTransformations = translationMatrix * scaleMatrix * rotationMatrix;
 
@@ -54,12 +62,20 @@ public class Transformations : MonoBehaviour {
 
         printVerts(ImageAfterTransformations);
 
+
+        //Viewing Matrix
         Vector3 CameraPos = new Vector3(17, 8, 55);
         Vector3 CameraLookRotation = new Vector3(5, 15, 5);
         Vector3 CameraUp = new Vector3(-4, 5, 15);
 
         Vector3 lookRotationDirection = CameraLookRotation - CameraPos;
-        Quaternion.LookRotation(lookRotationDirection.normalized, CameraUp.normalized);
+        Quaternion cameraRotation = Quaternion.LookRotation(lookRotationDirection.normalized, CameraUp.normalized);
+
+        Matrix4x4 viewingMatrix = Matrix4x4.TRS(new Vector3(0, 0, 0), cameraRotation, CameraPos);
+        printMatrix(viewingMatrix);
+
+        Vector3[] ImageAfterViewing = MatrixTransform(ImageAfterTransformations, viewingMatrix);
+        printVerts(ImageAfterViewing);
 
     }
 
