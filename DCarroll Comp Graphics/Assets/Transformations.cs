@@ -28,11 +28,40 @@ public class Transformations : MonoBehaviour {
         Vector3[] imageAfterRotation =
             MatrixTransform(cube, rotationMatrix);
         printVerts(imageAfterRotation);
-        
-      
 
-	
-	}
+        Matrix4x4 scaleMatrix = Matrix4x4.TRS(new Vector3(0, 0, 0), Quaternion.identity, new Vector3(15, 3, 5));
+
+        printMatrix(scaleMatrix);
+
+
+        Vector3[] ImageAfterScaling = MatrixTransform(imageAfterRotation, scaleMatrix);
+
+        printVerts(ImageAfterScaling);
+
+        Matrix4x4 translationMatrix = Matrix4x4.TRS(new Vector3(2, 4, -4), Quaternion.identity, new Vector3(1, 1, 1));
+
+        printMatrix(translationMatrix);
+
+        Vector3[] ImageAfterTranslation = MatrixTransform(ImageAfterScaling, translationMatrix);
+
+        printVerts(ImageAfterTranslation);
+
+        Matrix4x4 singleMatrixOfTransformations = translationMatrix * scaleMatrix * rotationMatrix;
+
+        printMatrix(singleMatrixOfTransformations);
+
+        Vector3[] ImageAfterTransformations = MatrixTransform(cube, singleMatrixOfTransformations );
+
+        printVerts(ImageAfterTransformations);
+
+        Vector3 CameraPos = new Vector3(17, 8, 55);
+        Vector3 CameraLookRotation = new Vector3(5, 15, 5);
+        Vector3 CameraUp = new Vector3(-4, 5, 15);
+
+        Vector3 lookRotationDirection = CameraLookRotation - CameraPos;
+        Quaternion.LookRotation(lookRotationDirection.normalized, CameraUp.normalized);
+
+    }
 
     private void printVerts(Vector3[] newImage)
     {
