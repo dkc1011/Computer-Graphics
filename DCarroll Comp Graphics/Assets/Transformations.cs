@@ -71,12 +71,21 @@ public class Transformations : MonoBehaviour {
         Vector3 lookRotationDirection = CameraLookRotation - CameraPos;
         Quaternion cameraRotation = Quaternion.LookRotation(lookRotationDirection.normalized, CameraUp.normalized);
 
-        Matrix4x4 viewingMatrix = Matrix4x4.TRS(new Vector3(0, 0, 0), cameraRotation, CameraPos);
+        Matrix4x4 viewingMatrix = Matrix4x4.TRS(-CameraPos, cameraRotation, Vector3.one);
         printMatrix(viewingMatrix);
 
         Vector3[] ImageAfterViewing = MatrixTransform(ImageAfterTransformations, viewingMatrix);
         printVerts(ImageAfterViewing);
 
+        Matrix4x4 projectionMatrix = Matrix4x4.Perspective(45, 1.6f,1,1000);
+        printMatrix(projectionMatrix);
+
+        Vector3[] ImageAfterProjection = MatrixTransform(ImageAfterViewing, projectionMatrix);
+        printVerts(ImageAfterProjection);
+
+        Matrix4x4 SuperMatrix = singleMatrixOfTransformations * viewingMatrix * projectionMatrix;
+        printMatrix(SuperMatrix);
+        
     }
 
     private void printVerts(Vector3[] newImage)
