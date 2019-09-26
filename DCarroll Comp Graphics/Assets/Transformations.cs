@@ -83,8 +83,11 @@ public class Transformations : MonoBehaviour {
         Vector3[] ImageAfterProjection = MatrixTransform(ImageAfterViewing, projectionMatrix);
         printVerts(ImageAfterProjection);
 
-        Matrix4x4 SuperMatrix = singleMatrixOfTransformations * viewingMatrix * projectionMatrix;
+        Matrix4x4 SuperMatrix = projectionMatrix * viewingMatrix * translationMatrix * scaleMatrix * rotationMatrix;
         printMatrix(SuperMatrix);
+
+        Vector3[] imageAfterSuperMatrix = MatrixTransform(cube, SuperMatrix);
+        printVerts(imageAfterSuperMatrix);
         
     }
 
