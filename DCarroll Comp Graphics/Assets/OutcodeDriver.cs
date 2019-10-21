@@ -8,9 +8,16 @@ public class OutcodeDriver : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //Create texture on which to draw line -- size can vary, should be square for cube sake
+        Texture2D tex = new Texture2D(256, 256);
+        GameObject cube = GetComponent<GameObject>();
+        GetComponent<Renderer>().material.mainTexture = tex;
+
+        //Starting points
         Vector2 point1 = new Vector2(.5f, 2f);
         Vector2 point2 = new Vector2(.3f, .1f);
 
+        //Apply outcodes and clip line
         Outcode a = new Outcode(point1);
         Outcode b = new Outcode(point2);
 
@@ -38,16 +45,34 @@ public class OutcodeDriver : MonoBehaviour
             Debug.Log(point2.x + "  ,  " + point2.y);
         }
 
+        //Create start of line and end of line
+        Vector2Int pixelPoint1 = new Vector2Int(17, 28);
+        Vector2Int pixelPoint2 = new Vector2Int(-1, 3);
 
-
-        Vector2Int pixelPoint1 = new Vector2Int(12, 15);
-        Vector2Int pixelPoint2 = new Vector2Int(2, 10);
+        //Pass start and end point through Breshenham's algorithm to create all other points between start and end point
         List<Vector2Int> list = Breshenham(pixelPoint1, pixelPoint2);
 
+        //Print all points to console 
         foreach (Vector2 v in list)
         {
             Debug.Log(v.x + "  ,  " + v.y);
+
         }
+
+        //Apply points as pixels to the texture
+        for(int i = 0; i < tex.height; i++)
+        {
+            for(int j = 0; j < tex.width; j++)
+            {
+                Color color = Color.red;
+                int drawX = (int)list[j].x;
+                int drawY = (int)list[i].y;
+                tex.SetPixel(drawX, drawY, color);
+            }
+        }
+
+        //Apply the texture to the cube
+        tex.Apply();
 
     }
 
@@ -59,14 +84,20 @@ public class OutcodeDriver : MonoBehaviour
 
     public List<Vector2Int> Breshenham(Vector2Int start, Vector2Int finish)
     {
+        //Start = first point in line, Finish = last point in line
+
+        // dx = start x coordinate - finish x coordinate
         int dx = finish.x - start.x;
 
+        // If dx is negative, invert the first and final points so that it is positive
         if(dx < 0)
         {
             return Breshenham(finish, start);
         }
 
+        // dy = start y cooridnate - finish y cooridnate 
         int dy = finish.y - start.y;
+
 
 
         if(dy < 0)
@@ -87,6 +118,8 @@ public class OutcodeDriver : MonoBehaviour
 
         int y = start.y;
 
+
+        //Populates the return list with Vector2Int objects that act as each point in the line
         for(int x = start.x; x <= finish.x; x++)
         {
             outputList.Add(new Vector2Int(x, y));
