@@ -27,20 +27,7 @@ public class OutcodeDriver : MonoBehaviour
         Vector2 point1 = new Vector2(.5f, 2f);
         Vector2 point2 = new Vector2(.3f, .1f);
 
-        //Create start of line and end of line
-        Vector2Int pixelPoint1 = new Vector2Int(17, 28);
-        Vector2Int pixelPoint2 = new Vector2Int(-1, 3);
-
-        //Pass start and end point through Breshenham's algorithm to create all other points between start and end point
-        List<Vector2Int> list = Breshenham(pixelPoint1, pixelPoint2);
-
-        //Print all points to console 
-        foreach (Vector2 v in list)
-        {
-            Debug.Log(v.x + "  ,  " + v.y);
-
-        }
-
+        //Create the vertices of the cube into the cube array
         cube[0] = new Vector3(1, 1, 1);
         cube[1] = new Vector3(-1, 1, 1);
         cube[2] = new Vector3(-1, -1, 1);
@@ -50,6 +37,8 @@ public class OutcodeDriver : MonoBehaviour
         cube[6] = new Vector3(-1, -1, -1);
         cube[7] = new Vector3(1, -1, -1);
 
+        //Starting angle from EXCEl sheet
+        rotationAngle = 47;
     }
 
     // Update is called once per frame
@@ -70,7 +59,7 @@ public class OutcodeDriver : MonoBehaviour
 
         Quaternion rotation = Quaternion.AngleAxis(rotationAngle, startingAxis);
         Matrix4x4 rotationMatrix =
-            Matrix4x4.TRS(new Vector3(0, 0, 0),
+            Matrix4x4.TRS(new Vector3(15, 5, 5),
                             rotation,
                             Vector3.one);
 
@@ -125,105 +114,107 @@ public class OutcodeDriver : MonoBehaviour
         Vector3[] imageAfterSuperMatrix = MatrixTransform(cube, SuperMatrix);
 
 
-        Vector2[] finalPostDevisionImage = DivideByZ(imageAfterSuperMatrix);
+        Vector2[] finalPostDivisionImage = DivideByZ(imageAfterSuperMatrix);
 
+        //Refreshes the texture
         Destroy(tex);
-
         tex = new Texture2D(500, 500);
         GetComponent<Renderer>().material.mainTexture = tex;
 
 
-        start = finalPostDevisionImage[0];
-        finish = finalPostDevisionImage[1];
+        start = finalPostDivisionImage[0];
+        finish = finalPostDivisionImage[1];
 
+
+
+        //Plot Cube after line is clipped
+        if (LineClip(ref start, ref finish))
+        {
+            Plot(Breshenham(ConvertToScreenSpace(start), ConvertToScreenSpace(finish)));
+        }
+
+        start = finalPostDivisionImage[0];
+        finish = finalPostDivisionImage[4];
 
         if (LineClip(ref start, ref finish))
         {
             Plot(Breshenham(ConvertToScreenSpace(start), ConvertToScreenSpace(finish)));
         }
 
-        start = finalPostDevisionImage[0];
-        finish = finalPostDevisionImage[4];
+        start = finalPostDivisionImage[0];
+        finish = finalPostDivisionImage[3];
 
         if (LineClip(ref start, ref finish))
         {
             Plot(Breshenham(ConvertToScreenSpace(start), ConvertToScreenSpace(finish)));
         }
 
-        start = finalPostDevisionImage[0];
-        finish = finalPostDevisionImage[3];
+        start = finalPostDivisionImage[1];
+        finish = finalPostDivisionImage[2];
 
         if (LineClip(ref start, ref finish))
         {
             Plot(Breshenham(ConvertToScreenSpace(start), ConvertToScreenSpace(finish)));
         }
 
-        start = finalPostDevisionImage[1];
-        finish = finalPostDevisionImage[2];
+        start = finalPostDivisionImage[1];
+        finish = finalPostDivisionImage[5];
 
         if (LineClip(ref start, ref finish))
         {
             Plot(Breshenham(ConvertToScreenSpace(start), ConvertToScreenSpace(finish)));
         }
 
-        start = finalPostDevisionImage[1];
-        finish = finalPostDevisionImage[5];
+        start = finalPostDivisionImage[2];
+        finish = finalPostDivisionImage[3];
 
         if (LineClip(ref start, ref finish))
         {
             Plot(Breshenham(ConvertToScreenSpace(start), ConvertToScreenSpace(finish)));
         }
 
-        start = finalPostDevisionImage[2];
-        finish = finalPostDevisionImage[3];
+        start = finalPostDivisionImage[2];
+        finish = finalPostDivisionImage[6];
 
         if (LineClip(ref start, ref finish))
         {
             Plot(Breshenham(ConvertToScreenSpace(start), ConvertToScreenSpace(finish)));
         }
 
-        start = finalPostDevisionImage[2];
-        finish = finalPostDevisionImage[6];
+        start = finalPostDivisionImage[3];
+        finish = finalPostDivisionImage[7];
 
         if (LineClip(ref start, ref finish))
         {
             Plot(Breshenham(ConvertToScreenSpace(start), ConvertToScreenSpace(finish)));
         }
 
-        start = finalPostDevisionImage[3];
-        finish = finalPostDevisionImage[7];
+        start = finalPostDivisionImage[4];
+        finish = finalPostDivisionImage[7];
 
         if (LineClip(ref start, ref finish))
         {
             Plot(Breshenham(ConvertToScreenSpace(start), ConvertToScreenSpace(finish)));
         }
 
-        start = finalPostDevisionImage[4];
-        finish = finalPostDevisionImage[7];
+        start = finalPostDivisionImage[4];
+        finish = finalPostDivisionImage[5];
 
         if (LineClip(ref start, ref finish))
         {
             Plot(Breshenham(ConvertToScreenSpace(start), ConvertToScreenSpace(finish)));
         }
 
-        start = finalPostDevisionImage[4];
-        finish = finalPostDevisionImage[5];
+        start = finalPostDivisionImage[5];
+        finish = finalPostDivisionImage[6];
 
         if (LineClip(ref start, ref finish))
         {
             Plot(Breshenham(ConvertToScreenSpace(start), ConvertToScreenSpace(finish)));
         }
 
-        start = finalPostDevisionImage[5];
-        finish = finalPostDevisionImage[6];
-
-        if (LineClip(ref start, ref finish))
-        {
-            Plot(Breshenham(ConvertToScreenSpace(start), ConvertToScreenSpace(finish)));
-        }
-
-        start = finalPostDevisionImage[6];
-        finish = finalPostDevisionImage[7];
+        start = finalPostDivisionImage[6];
+        finish = finalPostDivisionImage[7];
 
         if (LineClip(ref start, ref finish))
         {
